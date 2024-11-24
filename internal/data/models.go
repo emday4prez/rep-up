@@ -11,6 +11,13 @@ var (
 	ErrInvalidInput   = errors.New("invalid input")
 )
 
+type Models struct {
+	Workouts *WorkoutModel
+	// Add other models as needed:
+	BodyParts *BodyPartModel
+	Exercises *ExerciseModel
+}
+
 type BodyPart struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
@@ -80,4 +87,5 @@ func (m BodyPartModel) GetByID(id int64) (*BodyPart, error) {
 }
 
 // Similar Get methods need to be implemented for Exercise and Workout models
+
 // Additional methods like Create, Update, Delete, and List also needed

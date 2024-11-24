@@ -1,21 +1,26 @@
-// internal/handlers/handlers.go
-
 package handlers
 
 import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"repup/internal/data"
 )
 
 // Handlers holds our handler dependencies
 type Handlers struct {
-	db *sql.DB
+	db     *sql.DB
+	models data.Models // Add this line
 }
 
 // NewHandlers creates a new Handlers instance
 func NewHandlers(db *sql.DB) *Handlers {
-	return &Handlers{db: db}
+	return &Handlers{
+		db: db,
+		models: data.Models{
+			Workouts: &data.WorkoutModel{DB: db},
+		},
+	}
 }
 
 // envelope is a generic response wrapper

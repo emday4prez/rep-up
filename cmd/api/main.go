@@ -63,6 +63,13 @@ func main() {
 			r.Delete("/{id}", handlers.DeleteExercise)
 		})
 
+		r.Route("/workouts", func(r chi.Router) {
+			r.Get("/", handlers.ListWorkouts)
+			r.Post("/", handlers.CreateWorkout)
+			r.Get("/{id}", handlers.GetWorkout)
+			// r.Put("/{id}", handlers.UpdateWorkout)
+			// r.Delete("/{id}", handlers.DeleteWorkout)
+		})
 	})
 
 	// Start the server
