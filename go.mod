@@ -1,8 +1,8 @@
-module github.com/emday4prez/rep-up
+module repup
 
-go 1.22.2
+go 1.23.3
 
 require (
+	github.com/go-chi/chi/v5 v5.1.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
-	github.com/tursodatabase/libsql-client-go v0.0.0-20240902231107-85af5b9d094d // indirect
 )

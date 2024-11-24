@@ -1,66 +1,43 @@
-package main 
+package main
 
 import (
-	"context"
+	"fmt"
 	"log"
+	"net/http"
 	"os"
-	"time"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
-	"github.com/tursodatabase/libsql-client-go/libsql"
-	"database/sql"
 )
 
-type application struct {
-	db *sql.DB
-	logger *log.Logger
-}
-
-func(){
-	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
-
-	if := err godotenv.Load(); err != nil {
-		logger.Fatal("error loading .env file")
+func main() {
+	// Load .env file
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
 	}
 
-dbURL := os.Getenv("TURSO_DATABASE_URL")
-dbToken := os.Getenv("TURSO_AUTH_TOKEN")
+	// Create a new Chi router
+	r := chi.NewRouter()
 
-if dbUrl == "" || dbToken == "" {
-	logger.Fatal("database url and auth token are not set in .env")
-}
+	// Basic middleware stack
+	r.Use(middleware.Logger)    // Log all requests
+	r.Use(middleware.Recoverer) // Recover from panics without crashing server
 
-connString := dbUrl + "?authToken" + dbToken
+	// Basic test route
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Welcome to RepUp API"))
+	})
 
-//create database connection
-db, err := sql.Open ("libsql", connString)
-if err != nil{
-	logger.Fatal("error opening database:::", err)
-}
-defer db.Close()
+	// Get port from environment variable
+	port := os.Getenv("SERVER_PORT")
+	if port == "" {
+		port = ":8080" // Default port if not specified
+	}
 
-//connection pool settings
-db.SetMaxOpenConns(25)
-db.SetMaxIdleConns(25)
-db.SetConnMaxLifetime(5 * time.Minute)
-
-//test database connection 
-ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-defer cancel()
-
-if err := db.PingContext(ctx); err != nil {
-	logger.Fatal("error connecting to the database")
-}
-
-logger.Printf("connected to the database")
-
-//create application 
-app := &application{
-	db: db,
-	logger: logger,
-}
-
-logger.Printf("starting server...")
-
-
+	// Start the server
+	fmt.Printf("Server starting on port %s\n", port)
+	if err := http.ListenAndServe(port, r); err != nil {
+		log.Fatal(err)
+	}
 }
