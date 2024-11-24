@@ -213,7 +213,7 @@ func (h *Handlers) DeleteBodyPart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Begin a transaction since we'll be doing multiple operations
+	// Begin a transaction since there are multiple operations
 	tx, err := h.db.Begin()
 	if err != nil {
 		h.respondWithError(w, http.StatusInternalServerError, "Transaction error")

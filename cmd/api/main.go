@@ -10,8 +10,8 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 
-	"rep-up/internal/data"
-	"rep-up/internal/handlers"
+	"repup/internal/data"
+	"repup/internal/handlers"
 )
 
 func main() {
