@@ -1,5 +1,3 @@
-// cmd/api/main.go
-
 package main
 
 import (
@@ -8,11 +6,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/emday4prez/internal/handlers"
-	"github.com/emday4prez/repup/internal/data"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
+
+	"rep-up/internal/data"
+	"rep-up/internal/handlers"
 )
 
 func main() {
