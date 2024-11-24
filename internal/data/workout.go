@@ -14,15 +14,6 @@ type Workout struct {
 	Details []WorkoutExercise `json:"details,omitempty"`
 }
 
-type WorkoutExercise struct {
-	ID         int64   `json:"id"`
-	WorkoutID  int64   `json:"workout_id"`
-	ExerciseID int64   `json:"exercise_id"`
-	Sets       int     `json:"sets"`
-	Reps       int     `json:"reps"`
-	Weight     float64 `json:"weight"`
-}
-
 // WorkoutModel handles database operations for workouts
 type WorkoutModel struct {
 	DB *sql.DB
