@@ -6,4 +6,5 @@ var (
 	ErrRecordNotFound       = errors.New("data: record not found")
 	ErrInvalidInput         = errors.New("data: invalid input")
 	ErrReferentialIntegrity = errors.New("data: cannot delete record due to referential integrity constraint")
+	ErrDuplicateRecord      = errors.New("data: duplicate record")
 )

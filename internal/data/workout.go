@@ -2,7 +2,31 @@ package data
 
 import (
 	"database/sql"
+	"time"
 )
+
+type Workout struct {
+	ID      int64             `json:"id"`
+	UserID  int64             `json:"user_id"`
+	Name    string            `json:"name"`
+	Date    time.Time         `json:"date"`
+	Notes   string            `json:"notes"`
+	Details []WorkoutExercise `json:"details,omitempty"`
+}
+
+type WorkoutExercise struct {
+	ID         int64   `json:"id"`
+	WorkoutID  int64   `json:"workout_id"`
+	ExerciseID int64   `json:"exercise_id"`
+	Sets       int     `json:"sets"`
+	Reps       int     `json:"reps"`
+	Weight     float64 `json:"weight"`
+}
+
+// WorkoutModel handles database operations for workouts
+type WorkoutModel struct {
+	DB *sql.DB
+}
 
 // GetByID retrieves a single workout with its exercises
 func (m WorkoutModel) GetByID(id int64) (*Workout, error) {
