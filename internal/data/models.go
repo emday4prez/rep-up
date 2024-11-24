@@ -2,13 +2,7 @@ package data
 
 import (
 	"database/sql"
-	"errors"
 	"time"
-)
-
-var (
-	ErrRecordNotFound = errors.New("record not found")
-	ErrInvalidInput   = errors.New("invalid input")
 )
 
 type Models struct {
@@ -21,13 +15,6 @@ type Models struct {
 type BodyPart struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
-}
-
-type Exercise struct {
-	ID          int64  `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	BodyPartID  int64  `json:"body_part_id"`
 }
 
 type Workout struct {
@@ -50,11 +37,6 @@ type WorkoutExercise struct {
 
 // BodyPartModel handles database operations for body parts
 type BodyPartModel struct {
-	DB *sql.DB
-}
-
-// ExerciseModel handles database operations for exercises
-type ExerciseModel struct {
 	DB *sql.DB
 }
 
