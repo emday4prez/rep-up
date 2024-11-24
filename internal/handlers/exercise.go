@@ -17,6 +17,7 @@ type exerciseRequest struct {
 	BodyPartID  int64  `json:"body_part_id"`
 }
 
+// ////////////////////////////////////////////////////////
 // GetExercise handles GET requests for a single exercise
 func (h *Handlers) GetExercise(w http.ResponseWriter, r *http.Request) {
 	// Extract ID from URL using Chi router
@@ -63,6 +64,7 @@ func (h *Handlers) GetExercise(w http.ResponseWriter, r *http.Request) {
 	h.respondWithJSON(w, http.StatusOK, exercise)
 }
 
+// ////////////////////////////////////////////////////
 // ListExercises handles GET requests for all exercises
 func (h *Handlers) ListExercises(w http.ResponseWriter, r *http.Request) {
 	rows, err := h.db.Query(`
@@ -118,6 +120,7 @@ func (h *Handlers) ListExercises(w http.ResponseWriter, r *http.Request) {
 	h.respondWithJSON(w, http.StatusOK, exercises)
 }
 
+// //////////////////////////////////////////////////////////////
 // CreateExercise handles POST requests to create a new exercise
 func (h *Handlers) CreateExercise(w http.ResponseWriter, r *http.Request) {
 	var req exerciseRequest
@@ -175,6 +178,7 @@ func (h *Handlers) CreateExercise(w http.ResponseWriter, r *http.Request) {
 	h.respondWithJSON(w, http.StatusCreated, exercise)
 }
 
+// ///////////////////////////////////////////////////////////////////
 // UpdateExercise handles PUT requests to update an existing exercise
 func (h *Handlers) UpdateExercise(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
@@ -269,6 +273,7 @@ func (h *Handlers) UpdateExercise(w http.ResponseWriter, r *http.Request) {
 	h.respondWithJSON(w, http.StatusOK, exercise)
 }
 
+// ///////////////////////////////////////////////////////////////////
 // DeleteExercise handles DELETE requests to remove an exercise
 func (h *Handlers) DeleteExercise(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")

@@ -55,7 +55,14 @@ func main() {
 			r.Delete("/{id}", handlers.DeleteBodyPart)
 		})
 
-		// Similar route groups would be added for exercises and workouts
+		r.Route("/exercises", func(r chi.Router) {
+			r.Get("/", handlers.ListExercises)
+			r.Post("/", handlers.CreateExercise)
+			r.Get("/{id}", handlers.GetExercise)
+			r.Put("/{id}", handlers.UpdateExercise)
+			r.Delete("/{id}", handlers.DeleteExercise)
+		})
+
 	})
 
 	// Start the server
