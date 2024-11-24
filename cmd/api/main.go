@@ -1,3 +1,5 @@
+// cmd/api/main.go
+
 package main
 
 import (
@@ -6,38 +8,65 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/emday4prez/internal/handlers"
+	"github.com/emday4prez/repup/internal/data"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Load .env file
+	// Load environment variables
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	// Create a new Chi router
-	r := chi.NewRouter()
-
-	// Basic middleware stack
-	r.Use(middleware.Logger)    // Log all requests
-	r.Use(middleware.Recoverer) // Recover from panics without crashing server
-
-	// Basic test route
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Welcome to RepUp API"))
-	})
-
-	// Get port from environment variable
-	port := os.Getenv("SERVER_PORT")
-	if port == "" {
-		port = ":8080" // Default port if not specified
+	// Initialize database connection
+	dbConfig := data.Config{
+		URL:   os.Getenv("TURSO_DATABASE_URL"),
+		Token: os.Getenv("TURSO_AUTH_TOKEN"),
 	}
 
+	if err := data.Initialize(dbConfig); err != nil {
+		log.Fatal(fmt.Sprintf("Database initialization error: %v", err))
+	}
+	defer data.Close()
+
+	// Create a new router instance
+	r := chi.NewRouter()
+
+	// Middleware
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+
+	// Initialize handlers with database connection
+	db := data.GetDB()
+	handlers := handlers.NewHandlers(db)
+
+	// Routes
+	r.Route("/api", func(r chi.Router) {
+		// Body Parts
+		r.Route("/body-parts", func(r chi.Router) {
+			r.Get("/", handlers.ListBodyParts)
+			r.Post("/", handlers.CreateBodyPart)
+			r.Get("/{id}", handlers.GetBodyPart)
+			r.Put("/{id}", handlers.UpdateBodyPart)
+			r.Delete("/{id}", handlers.DeleteBodyPart)
+		})
+
+		// Similar route groups would be added for exercises and workouts
+	})
+
 	// Start the server
-	fmt.Printf("Server starting on port %s\n", port)
-	if err := http.ListenAndServe(port, r); err != nil {
+	port := os.Getenv("SERVER_PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Printf("Starting server on :%s", port)
+	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatal(err)
 	}
 }
