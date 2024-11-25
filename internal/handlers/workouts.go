@@ -34,6 +34,7 @@ func (h *Handlers) GetWorkout(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		h.respondWithError(w, http.StatusBadRequest, "Invalid ID format")
 		return
+
 	}
 
 	workout, err := h.models.Workouts.GetByID(id)
