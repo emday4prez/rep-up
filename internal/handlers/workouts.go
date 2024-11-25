@@ -26,6 +26,7 @@ type workoutExerciseRequest struct {
 	Sets       int     `json:"sets"`
 	Reps       int     `json:"reps"`
 	Weight     float64 `json:"weight"`
+	Notes      string  `json:"notes"`
 }
 
 func (h *Handlers) GetWorkout(w http.ResponseWriter, r *http.Request) {
@@ -97,14 +98,20 @@ func (h *Handlers) CreateWorkout(w http.ResponseWriter, r *http.Request) {
 
 	// Add exercises
 	for _, ex := range req.Details {
+		var weight *float64
+		if ex.Weight != 0 { // Assuming 0 means no weight provided
+			weightVal := ex.Weight
+			weight = &weightVal
+		}
+
 		workout.Details = append(workout.Details, data.WorkoutExercise{
 			ExerciseID: ex.ExerciseID,
 			Sets:       ex.Sets,
 			Reps:       ex.Reps,
-			Weight:     ex.Weight,
+			Weight:     weight,
+			Notes:      ex.Notes,
 		})
 	}
-
 	err = h.models.Workouts.Create(workout)
 	if err != nil {
 		switch {
@@ -148,14 +155,20 @@ func (h *Handlers) UpdateWorkout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, ex := range req.Details {
+		var weight *float64
+		if ex.Weight != 0 { // Assuming 0 means no weight provided
+			weightVal := ex.Weight
+			weight = &weightVal
+		}
+
 		workout.Details = append(workout.Details, data.WorkoutExercise{
 			ExerciseID: ex.ExerciseID,
 			Sets:       ex.Sets,
 			Reps:       ex.Reps,
-			Weight:     ex.Weight,
+			Weight:     weight,
+			Notes:      ex.Notes, // If you have this in your request
 		})
 	}
-
 	err = h.models.Workouts.Update(workout)
 	if err != nil {
 		switch {
