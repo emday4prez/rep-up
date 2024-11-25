@@ -42,35 +42,46 @@ func main() {
 
 	// Initialize handlers with database connection
 	db := data.GetDB()
-	handlers := handlers.NewHandlers(db)
+	mainHandlers := handlers.NewHandlers(db)
 
 	// Routes
 	r.Route("/api", func(r chi.Router) {
 		// Body Parts
 		r.Route("/body-parts", func(r chi.Router) {
-			r.Get("/", handlers.ListBodyParts)
-			r.Post("/", handlers.CreateBodyPart)
-			r.Get("/{id}", handlers.GetBodyPart)
-			r.Put("/{id}", handlers.UpdateBodyPart)
-			r.Delete("/{id}", handlers.DeleteBodyPart)
+			r.Get("/", mainHandlers.ListBodyParts)
+			r.Post("/", mainHandlers.CreateBodyPart)
+			r.Get("/{id}", mainHandlers.GetBodyPart)
+			r.Put("/{id}", mainHandlers.UpdateBodyPart)
+			r.Delete("/{id}", mainHandlers.DeleteBodyPart)
 		})
 
 		r.Route("/exercises", func(r chi.Router) {
-			r.Get("/", handlers.ListExercises)
-			r.Post("/", handlers.CreateExercise)
-			r.Get("/{id}", handlers.GetExercise)
-			r.Put("/{id}", handlers.UpdateExercise)
-			r.Delete("/{id}", handlers.DeleteExercise)
+			r.Get("/", mainHandlers.ListExercises)
+			r.Post("/", mainHandlers.CreateExercise)
+			r.Get("/{id}", mainHandlers.GetExercise)
+			r.Put("/{id}", mainHandlers.UpdateExercise)
+			r.Delete("/{id}", mainHandlers.DeleteExercise)
 		})
 
 		r.Route("/workouts", func(r chi.Router) {
-			r.Get("/", handlers.ListWorkouts)
-			r.Post("/", handlers.CreateWorkout)
-			r.Get("/{id}", handlers.GetWorkout)
-			r.Put("/{id}", handlers.UpdateWorkout)
-			r.Delete("/{id}", handlers.DeleteWorkout)
+			r.Get("/", mainHandlers.ListWorkouts)
+			r.Post("/", mainHandlers.CreateWorkout)
+			r.Get("/{id}", mainHandlers.GetWorkout)
+			r.Put("/{id}", mainHandlers.UpdateWorkout)
+			r.Delete("/{id}", mainHandlers.DeleteWorkout)
 		})
 	})
+
+	// Debug routes - only in development
+	if os.Getenv("ENV") != "production" {
+		debugHandlers := handlers.NewDebugHandlers(mainHandlers)
+
+		r.Route("/debug", func(r chi.Router) {
+			r.Get("/health", debugHandlers.TestHealthCheck)
+			r.Get("/tables", debugHandlers.TestListTables)
+			r.Post("/test-workout", debugHandlers.TestCreateWorkout)
+		})
+	}
 
 	// Start the server
 	port := os.Getenv("SERVER_PORT")

@@ -52,3 +52,13 @@ func (h *Handlers) respondWithError(w http.ResponseWriter, status int, message s
 	env := envelope{"error": message}
 	json.NewEncoder(w).Encode(env)
 }
+
+// DebugHandlers contains test/debug routes that should be disabled in production
+type DebugHandlers struct {
+	*Handlers // Embed the main Handlers to access common methods
+}
+
+// NewDebugHandlers creates a new DebugHandlers instance
+func NewDebugHandlers(h *Handlers) *DebugHandlers {
+	return &DebugHandlers{Handlers: h}
+}
