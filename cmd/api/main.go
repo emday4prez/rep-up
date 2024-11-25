@@ -67,8 +67,8 @@ func main() {
 			r.Get("/", handlers.ListWorkouts)
 			r.Post("/", handlers.CreateWorkout)
 			r.Get("/{id}", handlers.GetWorkout)
-			// r.Put("/{id}", handlers.UpdateWorkout)
-			// r.Delete("/{id}", handlers.DeleteWorkout)
+			r.Put("/{id}", handlers.UpdateWorkout)
+			r.Delete("/{id}", handlers.DeleteWorkout)
 		})
 	})
 
