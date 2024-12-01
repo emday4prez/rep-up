@@ -27,6 +27,7 @@ func Initialize(cfg Config) error {
 	var err error
 	once.Do(func() {
 		connStr := fmt.Sprintf("%s?authToken=%s", cfg.URL, cfg.Token)
+		log.Printf("Attempting to connect to database with URL: %s", cfg.URL)
 		db, err = sql.Open("libsql", connStr)
 		if err != nil {
 			log.Printf("Error opening database: %v", err)
@@ -39,7 +40,7 @@ func Initialize(cfg Config) error {
 			log.Printf("Error connecting to the database: %v", err)
 			return
 		}
-
+		log.Printf("Successfully connected to database")
 		// Set connection pool settings
 		db.SetMaxOpenConns(25)
 		db.SetMaxIdleConns(25)

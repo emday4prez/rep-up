@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -54,6 +55,7 @@ func (h *Handlers) ListBodyParts(w http.ResponseWriter, r *http.Request) {
 	// Query all body parts
 	rows, err := h.db.Query("SELECT id, name FROM body_parts ORDER BY name")
 	if err != nil {
+		log.Printf("Database error in ListBodyParts: %v", err)
 		h.respondWithError(w, http.StatusInternalServerError, "Database error")
 		return
 	}

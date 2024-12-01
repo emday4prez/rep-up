@@ -19,6 +19,10 @@ type UserModel struct {
 	DB *sql.DB
 }
 
+type contextKey string
+
+const UserContextKey = contextKey("user")
+
 // GetByOAuth retrieves a user by their OAuth provider and ID
 func (m UserModel) GetByOAuth(provider, oauthID string) (*User, error) {
 	user := &User{}
@@ -82,4 +86,31 @@ func (m UserModel) CreateOrUpdate(user *User) error {
 	)
 	user.ID = existing.ID
 	return err
+}
+
+func (m UserModel) GetByID(id int64) (*User, error) {
+	user := &User{}
+	err := m.DB.QueryRow(`
+        SELECT id, email, name, oauth_provider, oauth_id, created_at, updated_at
+        FROM users 
+        WHERE id = ?`,
+		id,
+	).Scan(
+		&user.ID,
+		&user.Email,
+		&user.Name,
+		&user.OAuthProvider,
+		&user.OAuthID,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ErrRecordNotFound
+		}
+		return nil, err
+	}
+
+	return user, nil
 }
