@@ -1,5 +1,16 @@
 -- migrations/001_initial_schema.sql
 
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    name TEXT,
+    oauth_provider TEXT NOT NULL,
+    oauth_id TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(oauth_provider, oauth_id)
+);
+
 -- Body parts table
 CREATE TABLE body_parts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,12 +33,13 @@ CREATE TABLE exercises (
 -- Workouts table
 CREATE TABLE workouts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT NOT NULL,
+    user_id INTEGER NOT NULL,
     name TEXT NOT NULL,
     date DATE NOT NULL,
     notes TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Workout exercises (junction table)

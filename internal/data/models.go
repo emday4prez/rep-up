@@ -4,4 +4,5 @@ type Models struct {
 	Workouts  *WorkoutModel
 	BodyParts *BodyPartModel
 	Exercises *ExerciseModel
+	Users     *UserModel
 }

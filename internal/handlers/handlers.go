@@ -23,6 +23,18 @@ func NewHandlers(db *sql.DB) *Handlers {
 	}
 }
 
+func (h *Handlers) AuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Get user from context (set by OAuth)
+		if _, ok := r.Context().Value(data.UserContextKey).(*data.User); !ok {
+			h.respondWithError(w, http.StatusUnauthorized, "Unauthorized")
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 // envelope is a generic response wrapper
 type envelope map[string]interface{}
 

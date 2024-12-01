@@ -8,6 +8,7 @@ import (
 type Workout struct {
 	ID      int64             `json:"id"`
 	UserID  int64             `json:"user_id"`
+	User    *User             `json:"user,omitempty"` // Optional user details
 	Name    string            `json:"name"`
 	Date    time.Time         `json:"date"`
 	Notes   string            `json:"notes"`
